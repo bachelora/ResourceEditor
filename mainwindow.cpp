@@ -85,6 +85,8 @@ MainWindow::MainWindow()
      for (auto tmp : fileNames){
           inputJsonFilePath = tmp;
           qDebug() << inputJsonFilePath ;//<< QT::endl;
+          readJson(inputJsonFilePath);
+          break;
       }
   }
 
@@ -167,6 +169,7 @@ void MainWindow::readJson(QString &path){
 
     while (!in.atEnd()) {
         QString line = in.readLine();
+        qDebug() << line ;
     }
 }
 
