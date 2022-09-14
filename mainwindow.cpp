@@ -160,16 +160,30 @@ MainWindow::MainWindow()
   }
 
 void MainWindow::readJson(QString &path){
-    QFile file(path);
+    QFile file(path);//参数就是文件的路径
+   //设置打开方式
+   file.open(QIODevice::ReadOnly);
+   //用QTextStream类去读取文本信息
+    QTextStream QS(&file);
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+   //用QString类去接收读取的信息
+    QString array=QS.readAll();
+         //将读取到的数据放入textEdit中
+      //   ui->textEdit->setText(array);
+         //关闭文件对象
+   file.close();
 
-    QTextStream in(&file);
+   qDebug() << array ;
+//    QFile file(path);
 
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        qDebug() << line ;
-    }
+//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+//        return;
+
+//    QTextStream in(&file);
+
+//    while (!in.atEnd()) {
+//        QString line = in.readLine();
+//        qDebug() << line ;
+//    }
 }
 
