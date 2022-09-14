@@ -1,7 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-  #include <QMainWindow>
+#include "QtWidgets/qtableview.h"
+#include <QMainWindow>
+#include <QTableView>
+#include <QItemDelegate>
+#include <QStandardItemModel>
+#include "mydelegate.h"
 
   class QAction;
   class QActionGroup;
@@ -24,6 +29,13 @@
 
   public:
       MainWindow();
+
+      // QStandardItemModel provides a classic
+      // item-based approach to working with the model.
+      QStandardItemModel *model;
+
+      // Make a member pointer to a new MyDelegate instance
+      MyDelegate *myDelegate;
 
   protected:
   #ifndef QT_NO_CONTEXTMENU
@@ -51,8 +63,9 @@
       QAction *exitAct;
       QAction *aboutAct;
       QAction *aboutQtAct;
-      QLabel *infoLabel;
+   //   QLabel *infoLabel;
 
+      QTableView *tableView;
   private:
     QString inputJsonFilePath;
     QVector<ItemType> itemsArray;

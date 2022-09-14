@@ -7,37 +7,56 @@
 
 
 
-MainWindow::MainWindow()
-  {
+MainWindow::MainWindow(){
+
+    QTableView *t = new QTableView;
+    t->setFrameStyle(0);
+
+    myDelegate = new MyDelegate(this);
+
+    // Create a new model
+    // QStandardItemModel(int rows, int columns, QObject * parent = 0)
+    model = new QStandardItemModel(10,6,this);
+
+    // Generate data
+    for(int row = 0; row < 4; row++)
+    {
+        for(int col = 0; col < 2; col++)
+        {
+            QModelIndex index
+                    = model->index(row,col,QModelIndex());
+            // 0 for all data
+            model->setData(index,0);
+        }
+    }
+    // Attach (tie) the model to the view
+    t->setModel(model);
+
+    // Tie the View with the new MyDelegate instance
+    // If we don not set this, it will use default delegate
+    t->setItemDelegate(myDelegate);
+
+
       QWidget *widget = new QWidget;
       setCentralWidget(widget);
 
-      QWidget *topFiller = new QWidget;
-      topFiller->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-      infoLabel = new QLabel(tr("<i>Choose a menu option, or right-click to "
-                                "invoke a context menu</i>"));
-      infoLabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
-      infoLabel->setAlignment(Qt::AlignCenter);
-
-      QWidget *bottomFiller = new QWidget;
-      bottomFiller->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
       QVBoxLayout *layout = new QVBoxLayout;
       //layout->setCanvasMargin(5);
-      layout->addWidget(topFiller);
-      layout->addWidget(infoLabel);
-      layout->addWidget(bottomFiller);
+    //  layout->addWidget(topFiller);
+    //  layout->addWidget(infoLabel);
+    //  layout->addWidget(bottomFiller);
+      layout->addWidget(t);
       widget->setLayout(layout);
 
       createActions();
       createMenus();
 
-      QString message = tr("A context menu is available by right-clicking");
-      statusBar()->showMessage(message);
+    //  QString message = tr("A context menu is available by right-clicking");
+     // statusBar()->showMessage(message);
 
-      setWindowTitle(tr("Menus"));
-      setMinimumSize(160, 160);
+      setWindowTitle(tr("ResourceEditor"));
+      setMinimumSize(480,320);
       resize(480, 320);
   }
 
@@ -54,7 +73,7 @@ MainWindow::MainWindow()
 
   void MainWindow::newFile()
   {
-      infoLabel->setText(tr("Invoked <b>File|New</b>"));
+     // infoLabel->setText(tr("Invoked <b>File|New</b>"));
   }
 
   void MainWindow::open()
@@ -87,7 +106,7 @@ MainWindow::MainWindow()
         fileNames = fileDialog->selectedFiles();
      }
 
-     for (auto tmp : fileNames){
+     for (auto &tmp : fileNames){
           inputJsonFilePath = tmp;
           qDebug() << inputJsonFilePath ;//<< QT::endl;
           readJson(inputJsonFilePath);
@@ -97,12 +116,12 @@ MainWindow::MainWindow()
 
   void MainWindow::save()
   {
-      infoLabel->setText(tr("Invoked <b>File|Save</b>"));
+     // infoLabel->setText(tr("Invoked <b>File|Save</b>"));
   }
 
   void MainWindow::about()
   {
-      infoLabel->setText(tr("Invoked <b>Help|About</b>"));
+     // infoLabel->setText(tr("Invoked <b>Help|About</b>"));
       QMessageBox::about(this, tr("About Menu"),
               tr("The <b>Menu</b> example shows how to create "
                  "menu-bar menus and context menus."));
@@ -110,7 +129,7 @@ MainWindow::MainWindow()
 
   void MainWindow::aboutQt()
   {
-      infoLabel->setText(tr("Invoked <b>Help|About Qt</b>"));
+     // infoLabel->setText(tr("Invoked <b>Help|About Qt</b>"));
   }
 
   void MainWindow::createActions()
