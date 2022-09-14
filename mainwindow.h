@@ -8,6 +8,16 @@
   class QLabel;
   class QMenu;
 
+  struct ItemType
+  {
+      QString name;
+      QString url;
+      QString link;
+      ItemType(QString& n,QString& u,QString& l):name(n),url(u),link(l){
+      }
+  };
+
+
   class MainWindow : public QMainWindow
   {
       Q_OBJECT
@@ -45,6 +55,7 @@
 
   private:
     QString inputJsonFilePath;
+    QVector<ItemType> itemsArray;
   };
 
   #endif

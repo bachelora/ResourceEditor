@@ -1,6 +1,11 @@
 #include "mainwindow.h"
 #include <QFile>
 #include <QtWidgets>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
+
 
 MainWindow::MainWindow()
   {
@@ -151,8 +156,6 @@ MainWindow::MainWindow()
       fileMenu->addSeparator();
       fileMenu->addAction(exitAct);
 
-
-
       helpMenu = menuBar()->addMenu(tr("&Help"));
       helpMenu->addAction(aboutAct);
       helpMenu->addAction(aboutQtAct);
@@ -160,30 +163,41 @@ MainWindow::MainWindow()
   }
 
 void MainWindow::readJson(QString &path){
-    QFile file(path);//参数就是文件的路径
-   //设置打开方式
-   file.open(QIODevice::ReadOnly);
-   //用QTextStream类去读取文本信息
-    QTextStream QS(&file);
+    QFile file(path);
 
-   //用QString类去接收读取的信息
-    QString array=QS.readAll();
-         //将读取到的数据放入textEdit中
-      //   ui->textEdit->setText(array);
-         //关闭文件对象
+    if (!file.open(QIODevice::ReadOnly))
+        return;
+
+   QByteArray bytes=file.readAll();
    file.close();
 
-   qDebug() << array ;
-//    QFile file(path);
+   QJsonParseError parseJsonErr;
+   // 转化为JSON文档
 
-//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-//        return;
+   QJsonDocument jsonDoc = QJsonDocument::fromJson(bytes, &parseJsonErr);
+   // 解析未发生错误
+   if(parseJsonErr.error == QJsonParseError::NoError)
+   {
+       QJsonObject rootObj = jsonDoc.object();  // 转化为root对象
 
-//    QTextStream in(&file);
+       QJsonValue items = rootObj.value("items");  // 获取指定key对应的value,
+       if(items.isArray()) // 判断获取的QJsonValue对象是不是数组结构
+       {
+           QVector<ItemType> itemTypeArray;
+           QJsonArray array = items.toArray();
+           for(int i=0;i<array.size();i++)
+           {
+               QJsonValue idValue = array.at(i);
+               QJsonObject idObject = idValue.toObject();
+               QString name = idObject["name"].toString();
+               QString url = idObject["url"].toString();
+               QString link = idObject["link"].toString();
+               itemTypeArray.append(ItemType(name,url,link));
+               qDebug() <<"name=" <<name << " url=" << url << " link=" << link;
+           }
+           itemsArray = std::move(itemTypeArray);
+       }
+   }
 
-//    while (!in.atEnd()) {
-//        QString line = in.readLine();
-//        qDebug() << line ;
-//    }
 }
 
