@@ -42,6 +42,9 @@
       QAction *aboutAct;
       QAction *aboutQtAct;
       QLabel *infoLabel;
+
+  private:
+    QString inputJsonFilePath;
   };
 
   #endif

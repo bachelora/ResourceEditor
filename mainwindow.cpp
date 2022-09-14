@@ -54,7 +54,38 @@ MainWindow::MainWindow()
 
   void MainWindow::open()
   {
-      infoLabel->setText(tr("Invoked <b>File|Open</b>"));
+     // infoLabel->setText(tr("Invoked <b>File|Open</b>"));
+      qDebug()<<"open file...";
+
+      //定义文件对话框类
+      QFileDialog *fileDialog = new QFileDialog(this);
+
+        //定义文件对话框标题
+      fileDialog->setWindowTitle(tr("打开Json文件"));
+
+      //设置默认文件路径
+      fileDialog->setDirectory(".");
+
+      //设置文件过滤器
+     fileDialog->setNameFilter(tr("Json(*.json)"));
+
+      //设置可以选择多个文件,默认为只能选择一个文件QFileDialog::ExistingFiles
+      fileDialog->setFileMode(QFileDialog::ExistingFiles);
+
+     //设置视图模式
+     fileDialog->setViewMode(QFileDialog::Detail);
+
+     //打印所有选择的文件的路径
+     QStringList fileNames;
+
+     if (fileDialog->exec()) {
+        fileNames = fileDialog->selectedFiles();
+     }
+
+     for (auto tmp : fileNames){
+          inputJsonFilePath = tmp;
+          qDebug() << inputJsonFilePath ;//<< QT::endl;
+      }
   }
 
   void MainWindow::save()
