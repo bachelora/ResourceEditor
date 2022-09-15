@@ -5,8 +5,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-
-
 MainWindow::MainWindow(){
 
     QTableView *t = new QTableView;
@@ -116,7 +114,40 @@ MainWindow::MainWindow(){
 
   void MainWindow::save()
   {
-     // infoLabel->setText(tr("Invoked <b>File|Save</b>"));
+      QFile file(":/template.json");
+
+      if (!file.open(QIODevice::ReadOnly))
+          return;
+
+     QByteArray bytes=file.readAll();
+     file.close();
+
+     QJsonParseError parseJsonErr;
+     // 转化为JSON文档
+     QJsonDocument jsonDoc = QJsonDocument::fromJson(bytes, &parseJsonErr);
+     // 解析未发生错误
+     if(parseJsonErr.error == QJsonParseError::NoError)
+     {
+         QJsonObject rootObj = jsonDoc.object();  // 转化为root对象
+
+         QJsonValue items = rootObj.value("prods");  // 获取指定key对应的value,
+         if(items.isArray()) // 判断获取的QJsonValue对象是不是数组结构
+         {
+           //  QVector<ItemType> itemTypeArray;
+             QJsonArray array = items.toArray();
+             for(int i=0;i<array.size();i++)
+             {
+                 QJsonValue idValue = array.at(i);
+                 QJsonObject idObject = idValue.toObject();
+                 QString name = idObject["name"].toString();
+                 QString parentKey = idObject["parentKey"].toString();
+                 QString key = idObject["key"].toString();
+               //  itemTypeArray.append(ItemType(name,url,link));
+                 qDebug() <<"name=" <<name << " parentKey=" << parentKey << " key=" << key;
+             }
+           //  itemsArray = std::move(itemTypeArray);
+         }
+     }
   }
 
   void MainWindow::about()
@@ -192,7 +223,6 @@ void MainWindow::readJson(QString &path){
 
    QJsonParseError parseJsonErr;
    // 转化为JSON文档
-
    QJsonDocument jsonDoc = QJsonDocument::fromJson(bytes, &parseJsonErr);
    // 解析未发生错误
    if(parseJsonErr.error == QJsonParseError::NoError)

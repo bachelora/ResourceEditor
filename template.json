@@ -1,0 +1,11 @@
+{
+        "prods": [{
+                "size": "960 X 540px",
+                "name": "APP大厅弹出开放式Banner图",
+                "key": "plaza_ad",
+                "exapmePic":"aa.png",
+                "supportMatch": "是",
+                "supportActivity": "是",
+                "note": "xx",
+        }]
+}
